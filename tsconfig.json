@@ -9,5 +9,6 @@
       "@e2e/shared": ["./packages/shared/src/index.ts"]
     }
   },
-  "include": ["packages/*/src/**/*", "packages/*/test/**/*"]
+  "include": ["packages/*/src/**/*"],
+  "exclude": ["packages/*/test/**/*"]
 }
