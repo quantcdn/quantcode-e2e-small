@@ -15,14 +15,15 @@ import type { MiddlewareHandler } from "hono"
  */
 export const authMiddleware: MiddlewareHandler = async (c, next) => {
   // BUG: 'post' should be 'POST' — POST is never treated as public
-  const publicMethods = ["GET", "post"]
+  const publicMethods = ["GET", "POST"]
 
   if (publicMethods.includes(c.req.method)) {
     return next()
   }
 
   const token = c.req.header("Authorization")?.replace("Bearer ", "")
-  if (!token || token !== (process.env.API_TOKEN ?? "test-token")) {
+  const env = (globalThis as Record<string, any>).Bun?.env ?? {}
+  if (!token || token !== (env.API_TOKEN ?? "test-token")) {
     return c.json({ error: "Unauthorized", status: 401 }, 401)
   }
 
