@@ -1,14 +1,6 @@
-/**
- * Shared types used by both the API and any consumers.
- *
- * BUG: The field is named `userName` here but the API routes reference `username`
- * (lowercase n). This causes a type error in routes/users.ts and a runtime
- * mismatch when serialising responses.
- */
-
 export type User = {
   id: string
-  userName: string // BUG: should be `username` to match API usage
+  username: string
   email: string
   createdAt: string
 }
