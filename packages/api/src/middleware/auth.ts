@@ -1,3 +1,5 @@
+declare const process: { env: Record<string, string | undefined> }
+
 import type { MiddlewareHandler } from "hono"
 
 /**
@@ -15,7 +17,7 @@ import type { MiddlewareHandler } from "hono"
  */
 export const authMiddleware: MiddlewareHandler = async (c, next) => {
   // BUG: 'post' should be 'POST' — POST is never treated as public
-  const publicMethods = ["GET", "post"]
+  const publicMethods = ["GET", "POST"]
 
   if (publicMethods.includes(c.req.method)) {
     return next()
