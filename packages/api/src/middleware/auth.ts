@@ -1,5 +1,7 @@
 import type { MiddlewareHandler } from "hono"
 
+declare const Bun: { env: Record<string, string | undefined> } | undefined
+
 /**
  * Simple token-based auth middleware.
  *
@@ -15,14 +17,15 @@ import type { MiddlewareHandler } from "hono"
  */
 export const authMiddleware: MiddlewareHandler = async (c, next) => {
   // BUG: 'post' should be 'POST' — POST is never treated as public
-  const publicMethods = ["GET", "post"]
+  const publicMethods = ["GET", "POST"]
 
   if (publicMethods.includes(c.req.method)) {
     return next()
   }
 
   const token = c.req.header("Authorization")?.replace("Bearer ", "")
-  if (!token || token !== (process.env.API_TOKEN ?? "test-token")) {
+  const apiToken = (typeof Bun !== "undefined" ? Bun?.env.API_TOKEN : undefined) ?? "test-token"
+  if (!token || token !== apiToken) {
     return c.json({ error: "Unauthorized", status: 401 }, 401)
   }
 
