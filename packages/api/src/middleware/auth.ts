@@ -14,10 +14,9 @@ import type { MiddlewareHandler } from "hono"
  * Fix: change `'post'` to `'POST'` in the public methods array.
  */
 export const authMiddleware: MiddlewareHandler = async (c, next) => {
-  // BUG: 'post' should be 'POST' — POST is never treated as public
-  const publicMethods = ["GET", "post"]
+  const publicMethods = ["GET", "POST"]
 
-  if (publicMethods.includes(c.req.method)) {
+  if (publicMethods.includes(c.req.method.toUpperCase())) {
     return next()
   }
 
