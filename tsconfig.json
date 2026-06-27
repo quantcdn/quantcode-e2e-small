@@ -6,8 +6,16 @@
     "strict": true,
     "skipLibCheck": true,
     "paths": {
-      "@e2e/shared": ["./packages/shared/src/index.ts"]
-    }
+      "@e2e/shared": [
+        "./packages/shared/src/index.ts"
+      ]
+    },
+    "types": [
+      "bun-types"
+    ]
   },
-  "include": ["packages/*/src/**/*", "packages/*/test/**/*"]
+  "include": [
+    "packages/*/src/**/*",
+    "packages/*/test/**/*"
+  ]
 }
