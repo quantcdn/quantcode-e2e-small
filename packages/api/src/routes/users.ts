@@ -1,9 +1,6 @@
 import { Hono } from "hono"
 import { db } from "../lib/db"
-import { notFound } from "../lib/errors"
-// BUG: missing import — `badRequest` is used below but not imported here.
-// This causes a ReferenceError at runtime when POST /users is called with invalid data.
-// Fix: add `badRequest` to the import from "../lib/errors"
+import { notFound, badRequest } from "../lib/errors"
 
 const router = new Hono()
 
