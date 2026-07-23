@@ -5,6 +5,8 @@
     "moduleResolution": "bundler",
     "strict": true,
     "skipLibCheck": true,
+    "typeRoots": ["./node_modules/.bun/node_modules/@types", "./node_modules/@types", "./node_modules"],
+    "types": ["node", "bun-types"],
     "paths": {
       "@e2e/shared": ["./packages/shared/src/index.ts"]
     }
