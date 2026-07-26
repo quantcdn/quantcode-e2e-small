@@ -11,5 +11,10 @@ import type { PaginatedResponse } from "../types"
  * The test in packages/shared/test/pagination.test.ts exercises the full contract.
  */
 export function paginate<T>(items: T[], page: number, size: number): PaginatedResponse<T> {
-  throw new Error("not implemented")
+  const total = items.length
+  const totalPages = size > 0 ? Math.ceil(total / size) : 0
+  const safePage = Math.max(1, page)
+  const start = (safePage - 1) * size
+  const data = start >= total ? [] : items.slice(start, start + size)
+  return { data, total, totalPages, page: safePage, pageSize: size }
 }
