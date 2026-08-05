@@ -11,3 +11,7 @@ export function badRequest(c: Context, msg = "Bad request") {
 export function unauthorized(c: Context, msg = "Unauthorized") {
   return c.json({ error: msg, status: 401 }, 401)
 }
+
+export function serverError(c: Context, msg = "Internal server error") {
+  return c.json({ error: msg, status: 500 }, 500)
+}

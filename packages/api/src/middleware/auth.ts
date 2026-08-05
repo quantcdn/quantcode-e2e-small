@@ -1,4 +1,7 @@
 import type { MiddlewareHandler } from "hono"
+import { serverError, unauthorized } from "../lib/errors"
+
+const BEARER_PREFIX = "Bearer "
 
 /**
  * Simple token-based auth middleware.
@@ -7,23 +10,25 @@ import type { MiddlewareHandler } from "hono"
  *   GET, POST  → public (no token required)
  *   PUT, DELETE, PATCH → require Bearer token
  *
- * BUG: The allow-list check uses `'post'` (lowercase) instead of `'POST'`.
- * HTTP methods are always uppercase per RFC 7231, so POST is never matched
- * as a public method — POST requests incorrectly require a token.
- *
- * Fix: change `'post'` to `'POST'` in the public methods array.
+ * Fails closed: if API_TOKEN is not configured, privileged methods are refused
+ * rather than falling back to a default token (ISM-1685).
  */
 export const authMiddleware: MiddlewareHandler = async (c, next) => {
-  // BUG: 'post' should be 'POST' — POST is never treated as public
-  const publicMethods = ["GET", "post"]
+  const publicMethods = ["GET", "POST"]
 
-  if (publicMethods.includes(c.req.method)) {
+  if (publicMethods.includes(c.req.method.toUpperCase())) {
     return next()
   }
 
-  const token = c.req.header("Authorization")?.replace("Bearer ", "")
-  if (!token || token !== (process.env.API_TOKEN ?? "test-token")) {
-    return c.json({ error: "Unauthorized", status: 401 }, 401)
+  const expected = process.env.API_TOKEN
+  if (!expected) {
+    return serverError(c, "Server misconfigured")
+  }
+
+  const header = c.req.header("Authorization") ?? ""
+  const token = header.startsWith(BEARER_PREFIX) ? header.slice(BEARER_PREFIX.length) : null
+  if (!token || token !== expected) {
+    return unauthorized(c)
   }
 
   return next()
