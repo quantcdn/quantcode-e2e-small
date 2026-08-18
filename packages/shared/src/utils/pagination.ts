@@ -7,9 +7,17 @@ import type { PaginatedResponse } from "../types"
  * @param page   1-indexed page number
  * @param size   Number of items per page
  *
- * TODO: implement this function — it is currently a stub.
- * The test in packages/shared/test/pagination.test.ts exercises the full contract.
+ * Returns the requested slice along with the page metadata. An out-of-range page
+ * yields an empty `data` array.
  */
 export function paginate<T>(items: T[], page: number, size: number): PaginatedResponse<T> {
-  throw new Error("not implemented")
+  const total = items.length
+  const start = (page - 1) * size
+  return {
+    data: items.slice(start, start + size),
+    page,
+    pageSize: size,
+    total,
+    totalPages: Math.ceil(total / size),
+  }
 }
