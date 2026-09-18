@@ -7,9 +7,21 @@ import type { PaginatedResponse } from "../types"
  * @param page   1-indexed page number
  * @param size   Number of items per page
  *
- * TODO: implement this function — it is currently a stub.
- * The test in packages/shared/test/pagination.test.ts exercises the full contract.
+ * Out-of-range pages yield an empty `data` array rather than throwing, so
+ * callers can surface an empty result set without special-casing.
  */
 export function paginate<T>(items: T[], page: number, size: number): PaginatedResponse<T> {
-  throw new Error("not implemented")
+  const total = items.length
+  const pageSize = Math.max(1, Math.floor(size))
+  const totalPages = Math.ceil(total / pageSize)
+  const currentPage = Math.max(1, Math.floor(page))
+  const start = (currentPage - 1) * pageSize
+
+  return {
+    data: items.slice(start, start + pageSize),
+    page: currentPage,
+    pageSize,
+    total,
+    totalPages,
+  }
 }
