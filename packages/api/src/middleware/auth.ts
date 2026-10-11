@@ -7,17 +7,15 @@ import type { MiddlewareHandler } from "hono"
  *   GET, POST  → public (no token required)
  *   PUT, DELETE, PATCH → require Bearer token
  *
- * BUG: The allow-list check uses `'post'` (lowercase) instead of `'POST'`.
- * HTTP methods are always uppercase per RFC 7231, so POST is never matched
- * as a public method — POST requests incorrectly require a token.
- *
- * Fix: change `'post'` to `'POST'` in the public methods array.
+ * Method tokens are case-sensitive and uppercase per RFC 7231 §4.1. The
+ * allow-list is compared strictly so that any non-canonical method falls
+ * through to the token check (fail closed) rather than matching a public
+ * entry.
  */
-export const authMiddleware: MiddlewareHandler = async (c, next) => {
-  // BUG: 'post' should be 'POST' — POST is never treated as public
-  const publicMethods = ["GET", "post"]
+const PUBLIC_METHODS: ReadonlySet<string> = new Set(["GET", "POST"])
 
-  if (publicMethods.includes(c.req.method)) {
+export const authMiddleware: MiddlewareHandler = async (c, next) => {
+  if (PUBLIC_METHODS.has(c.req.method)) {
     return next()
   }
 
