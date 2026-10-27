@@ -5,6 +5,7 @@
     "moduleResolution": "bundler",
     "strict": true,
     "skipLibCheck": true,
+    "types": ["bun-types"],
     "paths": {
       "@e2e/shared": ["./packages/shared/src/index.ts"]
     }
