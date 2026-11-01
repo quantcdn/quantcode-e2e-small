@@ -8,7 +8,7 @@
 
 export type User = {
   id: string
-  userName: string // BUG: should be `username` to match API usage
+  username: string // BUG: should be `username` to match API usage
   email: string
   createdAt: string
 }
