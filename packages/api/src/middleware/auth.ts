@@ -4,20 +4,16 @@ import type { MiddlewareHandler } from "hono"
  * Simple token-based auth middleware.
  *
  * Policy:
- *   GET, POST  → public (no token required)
- *   PUT, DELETE, PATCH → require Bearer token
- *
- * BUG: The allow-list check uses `'post'` (lowercase) instead of `'POST'`.
- * HTTP methods are always uppercase per RFC 7231, so POST is never matched
- * as a public method — POST requests incorrectly require a token.
- *
- * Fix: change `'post'` to `'POST'` in the public methods array.
+ *   GET (all routes)                → public (no token required)
+ *   POST /users (or /users/)        → public (no token required)
+ *   POST (any other route)          → require Bearer token
+ *   PUT, DELETE, PATCH              → require Bearer token
  */
 export const authMiddleware: MiddlewareHandler = async (c, next) => {
-  // BUG: 'post' should be 'POST' — POST is never treated as public
-  const publicMethods = ["GET", "post"]
+  const method = c.req.method
+  const isPublicPost = method === "POST" && /^\/users\/?$/.test(c.req.path)
 
-  if (publicMethods.includes(c.req.method)) {
+  if (method === "GET" || isPublicPost) {
     return next()
   }
 
