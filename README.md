@@ -18,9 +18,9 @@ packages/
 bun test --recursive
 ```
 
-## Known issues (intentional — for agent testing)
+## Previously known issues (now fixed)
 
-1. **`packages/api/src/middleware/auth.ts`** — method check uses `'post'` instead of `'POST'`
-2. **`packages/shared/src/types.ts`** — `User.userName` should be `username` to match API usage
-3. **`packages/api/src/routes/users.ts`** — `badRequest` is used but not imported
-4. **`packages/shared/src/utils/pagination.ts`** — `paginate()` is not implemented (stub throws)
+1. `packages/api/src/middleware/auth.ts` — method check used `'post'` instead of `'POST'`
+2. `packages/shared/src/types.ts` — `User.userName` renamed to `username` to match API usage
+3. `packages/api/src/routes/users.ts` — `badRequest` import added
+4. `packages/shared/src/utils/pagination.ts` — `paginate()` implemented
