@@ -4,6 +4,7 @@
     "module": "ESNext",
     "moduleResolution": "bundler",
     "strict": true,
+    "types": ["bun-types"],
     "skipLibCheck": true,
     "paths": {
       "@e2e/shared": ["./packages/shared/src/index.ts"]
